@@ -1,4 +1,3 @@
-import sys
 import time
 import logging
 from functools import wraps
@@ -45,12 +44,14 @@ def retry(exception, max_retires=5, delay=0.5):
                 except exception as e:
                     if _tries == max_retires:
                         logger.info(
-                            f"{fn.__name__} still has some exception as {str(e)}. Stopping retry."
+                            "{} still has some exception as {}. Stopping retry.".
+                            format(fn.__name__, str(e))
                         )
                         raise
 
                     logger.warning(
-                        f"{fn.__name__} has some exception as {str(e)}. Retrying in {_sleep_time} seconds."
+                        "{} has some exception as {}. Retrying in {} seconds.".
+                        format(fn.__name__, str(e), _sleep_time)
                     )
 
                 time.sleep(_sleep_time)
