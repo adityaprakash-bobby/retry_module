@@ -32,24 +32,23 @@ Installation and Usage
 
 * Install it using `pip`
 
-```bash
-pip install retry_module
-```
+.. code-block:: bash
+    pip install retry_module
+
 
 * Use the `retry` decorator to retry functions on exception.
 
-```python
-from retry_module.decorators import retry
-from random import random
+.. code-block:: python
+    from retry_module.decorators import retry
+    from random import random
 
-@retry(SomeError, max_retries=10)
-def func():
-    random_num = random()
-    if random_num < 0.6:
-        return "Yaay!"
-    else:
-        raise SomeError("There you go!")
-```
+    @retry(SomeError, max_retries=10)
+    def func():
+        random_num = random()
+        if random_num < 0.6:
+            return "Yaay!"
+        else:
+            raise SomeError("There you go!")
 
 Credits
 -------
