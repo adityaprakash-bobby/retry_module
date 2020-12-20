@@ -33,12 +33,14 @@ Installation and Usage
 * Install it using `pip`
 
 .. code-block:: bash
+
     pip install retry_module
 
 
 * Use the `retry` decorator to retry functions on exception.
 
 .. code-block:: python
+
     from retry_module.decorators import retry
     from random import random
 
