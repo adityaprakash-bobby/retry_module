@@ -21,7 +21,7 @@ class TestRetry_module(unittest.TestCase):
         retries = [0]
         max_tries = 5
 
-        @retry(Exception, max_retires=5)
+        @retry(Exception, max_retries=5)
         def f():
             retries[0] += 1
             raise Exception("Faulty function")
@@ -30,3 +30,25 @@ class TestRetry_module(unittest.TestCase):
             f()
 
         self.assertEqual(max_tries, retries[0])
+
+    def test_fn_is_executed_once_for_0_max_retries(self):
+        fn_calls = [0]
+
+        @retry(Exception, max_retries=0)
+        def f():
+            fn_calls[0] += 1
+            raise Exception("Fauty function")
+
+        with self.assertRaises(Exception):
+            f()
+
+        self.assertEqual(1, fn_calls[0])
+
+    def test_retry_raises_error_on_negative_retries(self):
+        """Test retry for negative max_retries"""
+
+        @retry(Exception, max_retries=-1)
+        def f():
+            raise Exception("Faulty function")
+
+        self.assertRaises(ValueError, f)

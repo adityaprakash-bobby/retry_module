@@ -5,14 +5,14 @@ from functools import wraps
 logger = logging.getLogger(__name__)
 
 
-def retry(exception, max_retires=5, delay=0.5):
+def retry(exception, max_retries=5, delay=0):
     """
     Decorator which retries a function in case of an exception.
 
-    When a max_retries is not mention, the function is retiried maximum 5
+    When a max_retries is not specified, the function is retried a maximum 5
     times, after which the exception is re-raised.
 
-    When a delay is not mentioned a default delay of 0.5 seconds is used for
+    When a delay is not specified a default delay of 0.5 seconds is used for
     times between the next retry. Delay between each execution is delay times
     the retry number.
 
@@ -37,12 +37,17 @@ def retry(exception, max_retires=5, delay=0.5):
             _tries = 0
             _sleep_time = delay
 
-            while _tries < max_retires:
+            if max_retries == 0:
+                return fn(*args, **kwargs)
+            elif max_retries < 0:
+                raise ValueError('max_retries must be >= 0')
+
+            while _tries < max_retries:
                 _tries += 1
                 try:
                     return fn(*args, **kwargs)
                 except exception as e:
-                    if _tries == max_retires:
+                    if _tries == max_retries:
                         logger.info(
                             "{} still has some exception as {}. Stopping retry.".
                             format(fn.__name__, str(e))
@@ -58,5 +63,4 @@ def retry(exception, max_retires=5, delay=0.5):
                 _sleep_time = (_tries + 1) * delay
 
         return retry_wrapper
-
     return retry_function
